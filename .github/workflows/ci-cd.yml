@@ -39,6 +39,10 @@ jobs:
         if: github.ref == 'refs/heads/main'
 
         steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+            - name: Build Docker Image (rebuild for fresh runner)
+              run: docker build -t ci-cd-demo:latest .
             - name: stop old container
               run: |
                  docker stop python-app || true
