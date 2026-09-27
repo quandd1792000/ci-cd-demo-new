@@ -14,15 +14,13 @@ jobs:
               uses: actions/checkout@v4
             - name: Verify Python version
               run: |
-                python3 --version
-                which python3
-            # - name: Install dependencies
-            #   run: |
-            #     source .venv/bin/activate
-            #     pip install -r requirements.txt
+                python3 --version || python --version
+            - name: Install dependencies
+              run: |
+                python3 -m pip install -r requirements.txt || python -m pip install -r requirements.txt
             - name: Run tests
               run: |
-                pytest test_app.py -v
+                python3 -m pytest test_app.py -v || python -m pytest test_app.py -v
     build:
         name: Build Docker Image
         runs-on: self-hosted
@@ -44,6 +42,7 @@ jobs:
             - name: stop old container
               run: |
                  docker stop python-app || true
+                 docker rm python-app || true
             - name: start new container
               run: |
                  docker run -d --name python-app -p 5001:5001 --restart unless-stopped ci-cd-demo:latest
